@@ -8,7 +8,7 @@ const CONFIG_KEY = "ARRANGEMENTS";
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
-    vscode.commands.registerCommand("tabstack.savecurrent", async () => {
+    vscode.commands.registerCommand("tabstack.save", async () => {
       const arrangement = getArrangement();
 
       // Prompt user for a string to label this arrangement.
@@ -55,11 +55,20 @@ export function activate(context: vscode.ExtensionContext) {
       }
 
       const config = currentConfigs[arrangementName];
-      console.log(config);
-      // TODO: Close all tabs and restore the saved arrangement using the config object.
+
+      await vscode.commands.executeCommand("workbench.action.closeAllEditors");
+      config.forEach(async (group) => {
+        for (const tabPath of group.tabs) {
+          const uri = vscode.Uri.file(tabPath);
+          await vscode.window.showTextDocument(uri, {
+            viewColumn: group.groupPosition,
+            preview: false,
+          });
+        }
+      });
 
       vscode.window.showInformationMessage(
-        `Tab arrangement ${arrangementName} loaded!`
+        `Tab arrangement \"${arrangementName}\" loaded!`
       );
     })
   );
@@ -68,6 +77,32 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand("tabstack.clear", () => {
       context.workspaceState.update(CONFIG_KEY, {});
       vscode.window.showInformationMessage("Cleared all tab arrangements.");
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand("tabstack.delete", async () => {
+      const currentConfigs = context.workspaceState.get(
+        CONFIG_KEY,
+        {}
+      ) as Record<string, Arrangement>;
+
+      const arrangementName = await vscode.window.showQuickPick(
+        Object.keys(currentConfigs),
+        {
+          placeHolder: "Select a tab arrangement to delete",
+        }
+      );
+      if (!arrangementName) {
+        return;
+      }
+
+      delete currentConfigs[arrangementName];
+      context.workspaceState.update(CONFIG_KEY, currentConfigs);
+
+      vscode.window.showInformationMessage(
+        `Tab arrangement \"${arrangementName}\" deleted`
+      );
     })
   );
 }

@@ -14,8 +14,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "tabstack.savecurrent",
-        "title": "TabStack: Save Current Arrangement"
+        "command": "tabstack.save",
+        "title": "TabStack: Save Arrangement"
       },
       {
         "command": "tabstack.load",
@@ -23,7 +23,11 @@
       },
       {
         "command": "tabstack.clear",
-        "title": "TabStack: Clear all"
+        "title": "TabStack: Clear All"
+      },
+      {
+        "command": "tabstack.delete",
+        "title": "TabStack: Delete Arrangement"
       }
     ]
   },
