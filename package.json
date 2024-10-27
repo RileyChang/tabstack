@@ -14,8 +14,16 @@
   "contributes": {
     "commands": [
       {
-        "command": "tabstack.helloWorld",
-        "title": "Hello World"
+        "command": "tabstack.savecurrent",
+        "title": "TabStack: Save Current Arrangement"
+      },
+      {
+        "command": "tabstack.load",
+        "title": "TabStack: Load Arrangement"
+      },
+      {
+        "command": "tabstack.clear",
+        "title": "TabStack: Clear all"
       }
     ]
   },
