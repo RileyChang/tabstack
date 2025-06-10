@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
 import { getArrangement } from "./tabs";
 import { Arrangement } from "./types";
+import { insertTimestamp } from "./timestamp";
 
 const CONFIG_KEY = "ARRANGEMENTS";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
-export function activate(context: vscode.ExtensionContext) {
+// Tab management commands
+function registerTabCommands(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand("tabstack.save", async () => {
       const arrangement = getArrangement();
@@ -45,7 +45,7 @@ export function activate(context: vscode.ExtensionContext) {
       ) as Record<string, Arrangement>;
 
       const arrangementName = await vscode.window.showQuickPick(
-        Object.keys(currentConfigs),
+        Object.keys(currentConfigs).map((name) => ({ label: name })),
         {
           placeHolder: "Select a tab arrangement to restore",
         }
@@ -54,7 +54,7 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      const config = currentConfigs[arrangementName];
+      const config = currentConfigs[arrangementName.label];
 
       await vscode.commands.executeCommand("workbench.action.closeAllEditors");
       config.forEach(async (group) => {
@@ -68,7 +68,7 @@ export function activate(context: vscode.ExtensionContext) {
       });
 
       vscode.window.showInformationMessage(
-        `Tab arrangement \"${arrangementName}\" loaded!`
+        `Tab arrangement "${arrangementName.label}" loaded!`
       );
     })
   );
@@ -88,7 +88,7 @@ export function activate(context: vscode.ExtensionContext) {
       ) as Record<string, Arrangement>;
 
       const arrangementName = await vscode.window.showQuickPick(
-        Object.keys(currentConfigs),
+        Object.keys(currentConfigs).map((name) => ({ label: name })),
         {
           placeHolder: "Select a tab arrangement to delete",
         }
@@ -97,13 +97,25 @@ export function activate(context: vscode.ExtensionContext) {
         return;
       }
 
-      delete currentConfigs[arrangementName];
+      delete currentConfigs[arrangementName.label];
       context.workspaceState.update(CONFIG_KEY, currentConfigs);
 
       vscode.window.showInformationMessage(
-        `Tab arrangement \"${arrangementName}\" deleted`
+        `Tab arrangement "${arrangementName.label}" deleted`
       );
     })
+  );
+}
+
+// This method is called when your extension is activated
+// Your extension is activated the very first time the command is executed
+export function activate(context: vscode.ExtensionContext) {
+  // Register tab management commands
+  registerTabCommands(context);
+
+  // Register timestamp command
+  context.subscriptions.push(
+    vscode.commands.registerCommand("tabstack.insertTimestamp", insertTimestamp)
   );
 }
 

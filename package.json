@@ -15,19 +15,31 @@
     "commands": [
       {
         "command": "tabstack.save",
-        "title": "TabStack: Save Arrangement"
+        "title": "TabStack: Save Tab Arrangement"
       },
       {
         "command": "tabstack.load",
-        "title": "TabStack: Load Arrangement"
+        "title": "TabStack: Load Tab Arrangement"
       },
       {
         "command": "tabstack.clear",
-        "title": "TabStack: Clear All"
+        "title": "TabStack: Clear All Tab Arrangements"
       },
       {
         "command": "tabstack.delete",
-        "title": "TabStack: Delete Arrangement"
+        "title": "TabStack: Delete Tab Arrangement"
+      },
+      {
+        "command": "tabstack.insertTimestamp",
+        "title": "TabStack: Insert Timestamp"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "tabstack.insertTimestamp",
+        "key": "ctrl+shift+t",
+        "mac": "cmd+shift+t",
+        "when": "editorTextFocus"
       }
     ]
   },
