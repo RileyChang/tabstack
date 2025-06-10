@@ -15,3 +15,8 @@ This extension can:
 Also:
 
 - Insert a current timestamp string at the current cursor position via keyboard shortcut.
+
+## Dev notes
+
+- Run/debug the extension by pressing F5
+- Package the extension into a .VSIX file by running `vsce package`, then install the file by going to the extensions menu and clicking "install from VSIX"
